@@ -168,8 +168,126 @@ function x(target, name, descriptor) {
 2. es6 proxy
 3. $.proxy   
 代理类与目标类隔离
-### 6.外观模式（组合型）
+### 6.外观模式（组合）
 
 隐藏系统的复杂性，并向客户端提供了一个客户端可以访问系统的接口。   
 子系统中的一组接口提供一个一致的界面，外观模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。
-### 7.
+### 7.观察者模式（行为）
+观察者模式和发布订阅模式的区别，最大的区别是调度的地方（发布订阅模式）.  
+
+虽然两种模式都存在订阅者和发布者（具体观察者可认为是订阅者、具体目标可认为是发布者），但是观察者模式是由具体目标调度的，而发布/订阅模式是统一由调度中心调的，所以观察者模式的订阅者与发布者之间是存在依赖的，而发布/订阅模式则不会。
+
+```js
+class Subject {
+    constructor () {
+        this.state = 0
+        this.observers = []
+    }
+    getState () {
+        return this.state
+    }
+    setState (state) {
+        this.state = state
+        this.notifyAllObservers()
+    }
+    notifyAllObservers () {
+        this.observers.map((item) => {
+            item.update()
+        })
+    }
+    attach (observer) {
+        this.observers.push(observer)
+    }
+}
+class Observer {
+  constructor(name, subject) {
+      this.name = name
+      this.subject = subject
+      this.subject.attach(this)
+  }
+  update () {
+      console.log('update')
+  }
+}
+let s = new Subject()
+let o =new Observer('O', s)
+```
+场景
+1. 网页事件绑定
+2. Promise
+3. $.Callbacks() 听都没听过
+4. node.js及各种框架的自定义事件
+
+### 8.迭代器模式（行为）
+这种模式用于顺序访问集合对象的元素，不需要知道集合对象的底层表示。
+主要用来解决不同的方式来遍历整个整合对象。
+```js
+class Iterator {
+    constructor () {
+        this.list = container.list
+        this.index = 0
+    }
+    next () {
+        return this.list[this.index++]
+    }
+    hasNext () {
+        if (this.index>=this.list.length) {
+            return false
+        }
+        return true
+    }
+}
+class Container {
+    constructor (list) {
+        this.list = list
+    }
+    getIterator () {
+        return new Iterator(this)
+    }
+}
+
+let c = new Container([1,2,3,4])
+let i = c.getIterator()
+while(i.hasNext()) {
+    console.log(i.next())
+}
+```
+场景
+1. ES6 的迭代器
+2. jQuery的each
+
+有序数据集合（map,set,array,string,typeArray,arguments,NodeList）,以上都有Symbol.iterator,属性是一个函数，执行返回一个迭代器。
+## 9.状态模式（行为）
+类的行为是基于它的状态改变的。这种类型的设计模式属于行为型模式。
+```js
+// 交通灯 红绿黄
+class State {
+    constructor (color) {
+        this.color = color
+    }
+    handle (l) {
+        console.log('retrun light')
+        context.setState(l)
+    }
+}
+class Context  {
+    constructor() {
+        this.state = null
+    }
+    getState () {
+        return this.state
+    }
+    setState (state) {
+        this.state = state
+    }
+}
+let context = new Context()
+let green = new State('lv')
+```
+## 10.原型模式
+用原型实例指定创建对象的种类，并且通过拷贝这些原型创建新的对象。
+`Object.create(Instance)`
+## 11.桥接模式
+将抽象部分与实现部分分离，使它们都可以独立的变化。自由组合。
+## 12.组合模式
+生成属性结构，标识整体-部分关系，让整体和部分有统一的操作方式
