@@ -54,5 +54,5 @@ flex-basis属性定义了在分配多余空间之前，项目占据的主轴空�
 5. flex   
 flex属性是flex-grow, flex-shrink 和 flex-basis的简写，默认值为0 1 auto。
 
-6. align-self
+6. align-self  
 align-self属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。
